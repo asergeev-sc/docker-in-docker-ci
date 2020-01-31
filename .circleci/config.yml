@@ -1,0 +1,22 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: docker
+    steps:
+      - run:
+          name: Read MAVEN_REPO
+          command: |
+            # login into Azure and get token
+            export AZ_ACCESS_TOKEN=$(docker run -e AZURE_USER -e AZURE_PASS -i mcr.microsoft.com/azure-cli /bin/bash -c "az login -u \$AZURE_USER -p \$AZURE_PASS --output none && az account get-access-token -o tsv --query accessToken")
+            # get Vault token
+            export VAULT_TOKEN=$(docker run -i -e AZ_ACCESS_TOKEN -e VAULT_ADDR vault sh -c "vault write -field=token auth/opuscapita-ad-jwt/login role=\"machineuser-read-list\" jwt=\"\${AZ_ACCESS_TOKEN}\"")
+            # get Maven specific information
+            export MAVEN_REPO=$(docker run -i -e VAULT_TOKEN -e VAULT_ADDR vault sh -c "vault kv get --field=value machineuser/MAVEN_REPO")
+
+            echo "MAVEN_REPO: '${MAVEN_REPO}'"
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
