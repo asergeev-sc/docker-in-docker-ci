@@ -6,8 +6,8 @@ jobs:
       - image: opuscapita/embedded-tomcat-ci:master
         name: secondary
         auth:
-          DOCKER_USER: $DOCKER_USER
-          DOCKER_PASS: $DOCKER_PASS
+          username: $DOCKER_USER
+          password: $DOCKER_PASS
         environment:
           DOCKER_USER: $DOCKER_USER
           DOCKER_PASS: $DOCKER_PASS
