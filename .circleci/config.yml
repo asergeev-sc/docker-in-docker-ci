@@ -4,8 +4,8 @@ jobs:
     docker:
       - image: opuscapita-docker.jfrog.io/hello-world:1
         auth:
-          username: $DOCKER_USER
-          password: $DOCKER_PASS
+          username: $JFROG_USER
+          password: $JFROG_PASSWD
     steps:
       - run:
           name: Read MAVEN_REPO
